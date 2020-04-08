@@ -71,7 +71,13 @@ The scheme is depicted in Figure \ref{fig:attack-game}
         \node[anchor=south west] at (\lR, -4.25) {$\sigma_1 \leftarrow S(sk,m_1;r)$};
         \draw[->] (\lR, -4.25) -- (\rR, -4.25) node[anchor=south east] {$\sigma_1$};
         \draw[->,color=red] (\rR, -4.5) -- (\lDR, -4.5) node[midway, anchor=south] {$\sigma_1' = S(sk;m_1;F(k, m_1))$} node[midway, anchor=north] {$\sigma_1' \leftarrow \sigma_1$};
-        \draw[->] (\lDR, -4.75) -- (\rDR, -4.75) node[anchor=south east, text=blue] {$\sigma_1$};
+        \draw[->] (\lDR, -4.75) -- (\rDR, -4.75) node[anchor=south east, text=blue] {$\sigma_1'$};
+
+        % Table of queries 
+        \draw[color=red] (7.25, -5.75) -- (8.75, -5.75) node[midway, text=red, anchor=south] {\scriptsize Answered Queries};
+        \draw[color=red] (8.05, -5.75) -- (8.05, -6.85);
+        \node[text=red] at (8, -6) {$m_1 \hspace{5pt} \sigma_1'$};
+        \node[text=red] at (8, -6.5) {$ \vdots \hspace{12pt} \vdots$};
 
         % Next Signing Queries
         \node[anchor=north east] at (\rDR, -4.75) {$\vdots$};
@@ -100,7 +106,11 @@ Once initialized, $A_{DR}$ performs a series of signing queries $Sign(m_1), \dot
 For each query, he expects $\sigma_i' \leftarrow S'(sk', m_i) = S(sk, m_i; r') = S(sk, m_i; F(k, m_i)$.
 We forward the query to $C_R$ and receive $\sigma_i \leftarrow S(sk, m_i; r)$ where $r \leftarrow \mathcal{R}$.
 As $F$ is a secure PRF, no attacker has an advantage in telling whether the image he receives is the actually $F(k, m_i)$ for some $k \rightarrow R$, or it is a random value ($r \leftarrow R$).
-Hence we send respond the query with $\sigma_i' = \sigma_i$.
+Otherwise, we could build an attacker that wins at the Attack Game 4.2 and $F$ would not be PRF secure.
+Hence we respond the query with $\sigma_i' = \sigma_i$.
+Observe that this is true only if $m_i$ has not been sent before.
+In the event that $A_{DR}$ repeats a query, and in order to preserve the determinism of the system, we will respond the query with the same value as the first time.
+This forces us to keep track of all the queries we have responded so far in a table-like structure.
 
 Once $A_{DR}$ has finished querying, it outputs (by hypothesis) a valid forgery $(\sigma^*, m^*)$, which we can also send as a valid forgery to $C_R$ hence winning the randomized game, which was secure by construction.
 This contradicts our initial assumption, hence $S'$ is indeed secure. \hfill $\qed$
