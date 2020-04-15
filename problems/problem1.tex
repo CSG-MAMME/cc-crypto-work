@@ -1,3 +1,45 @@
-\section{Problem 1:}\label{sec:problem1}
+\section{Problem 1: Secure PRP}\label{sec:problem1}
 
-Suppose $F$ is a secure PRP with blocklength $\lambda$. Give the decryption algorithm for the following scheme and prove that it does not have CPA security:
+Suppose $F$ is a secure PRP with blocklength $\lambda$.
+Give the decryption algorithm for the following scheme and prove that it does not have CPA security:
+
+\begin{center}
+    \rule{5cm}{0.4pt}
+\end{center}
+
+\textbf{\textit{Proof:}}
+For the first part, we will assume we are given the pseudo-random permutation F and its associated key $k$. We also have access to the ciphertext, which consists of a concatenation of 3 parameters: $r$, $s$ and $t$. To find the plaintext $m = <m_1$ $\vert \vert$ $m_2>$, we can find its two parts by simply isolating them from the $s$ and $t$ expressions. We can do it very easily since F is a secure PRP and, hence, efficiently invertible. Also, the $\oplus$ (XOR) operator can be trivially inverted using the relation $a \oplus b = c 	\Leftrightarrow a = c \oplus b$.
+
+The decryption algorithm will look like this:
+\begin{equation*}
+    \begin{split}
+        & \text{Dec}_{k} (<r \vert \vert s \vert \vert t>): \\
+        & m_1 \coloneqq F_k^{-1} (s) \oplus r; \hspace{5pt} m_2 \coloneqq F_k^{-1} (t) \oplus r \oplus m_1 \oplus F_k (m_1) \\
+        & m \coloneqq <m_1 \vert \vert m_2> \\
+        & \textbf{return } m
+    \end{split}
+\end{equation*}
+To make sure that this is, indeed, the correct decryption of the scheme, we can just check that $Dec_k (Enc_k (m)) = m$, for every message $m \in \mathcal{M}$.
+
+Now, to show that this scheme is not CPA-secure, we need to put ourselves in the adversary's shoes. This means that we no longer have access to the PRP, nor the private key $k$, but we are able to know the ciphertext associated to a chosen plaintext, for various queries.
+
+One of the main techniques that witnesses a non CPA-secure scheme is to check that it is deterministic (not randomized). Clearly, this one is not the case, so we'll have to think it twice.
+
+Let's recall that a cipher $\mathcal{E}$ is \textbf{CPA-secure} (or semantically secure against chosen plaintext attack) if, for all efficient adversaries $\mathcal{A}$, the value CPAadv$[\mathcal{A}, \mathcal{E}]$ is negligible. We will work instead with the "bit guessing" game version described in Boneh \& Shoup's book. In this similar version, we have the following advantage, for a $b \in \{0, 1\}$ randomly selected by the challenger and the $\hat b \in \{0, 1\}$ computed by the adversary:
+
+\begin{equation*}
+    \text{CPAadv}[\mathcal{A}, \mathcal{E}] = 2 \cdot \text{CPAadv}^{*}[\mathcal{A}, \mathcal{E}] = 2 \cdot \left| \mathbb{P}[\hat{b} = b] - \frac{1}{2} \right|
+\end{equation*}
+
+Now, we build an smart adversary that only takes 2 queries to break the CPA security: in the first attempt, they will send the messages $M = <m_1$ $\vert \vert$ $m_2>$ and $\hat M = <m_1$ $\vert \vert$ $\hat m_2>$, meaning that in both cases the challenger will return the same $s := F_k (r \oplus m_1)$, altogether with the first generated random number $r$.
+
+Now the adversary has access to a valuous information: $r \oplus m_1$ (since they have both strings) and its pseudo-random permutation $s = F_k (r \oplus m_1)$.
+The second query will consist of the two messages $M' = <r \oplus m_1$ $\vert \vert$ $s>$ and $\hat M' = <r \oplus m_1$ $\vert \vert$ $p>$, where $p$ is any string other than $s$.
+From the challenger, the adversary will receive the new values $r'$ (again, randomly generated), $s' := F_k(r' \oplus r \oplus m_1)$ and $t' := F_k(r' \oplus (r \oplus m_1) \oplus F_k (r \oplus m_1) \oplus m_x)$, where $m_x$ could either be $s$ or $p$ with equal probability.
+
+The key idea now is to see that the messages $s'$ and $t'$ will be exactly the same if and only if the message selected by the challenger is $m_x = s$.
+This happens because $F_k(r \oplus m_1) \oplus s = 1$, which leads to $t' = F_k(r' \oplus r \oplus m_1) = s'$.
+And this happens exclusively for $m_x = s$ since F is a permutation and, therefore, gives different outputs for different inputs.
+
+That means in the second query the adversary is capable to find the correct $\hat b$ with probability $1$, leading to $\text{CPAadv}[\mathcal{A}, \mathcal{E}] = 2 \cdot \vert \mathbb{P}[\hat{b} = b] - \frac{1}{2} \vert = 2 \cdot \vert 1 - \frac{1}{2} \vert = 1$, which is clearly not negligible, and the scheme is not CPA-secure. \hfill \qed
+

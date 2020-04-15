@@ -1,3 +1,120 @@
-\section{Problem 4:}\label{sec:problem4}
+\section{Problem 4: Secret Sharing Schemes}\label{sec:problem4}
 
-Let $p$ be a prime and let $q = p^r$ for some positive integer...
+Let $p$ be a prime and let $q = p^r$ for some positive integer $r\in \Z ^+$.
+Let $\P$ be a set of participants and $\Gamma \subset 2^\P$ be a monotone increasing access structure.
+
+\begin{enumerate}
+    \item Prove that if $\Gamma$ admits a vector space secret sharing scheme over $\F_p$, then $\Gamma$ admits a vector space secret sharing scheme over $GF(q)$.
+    \item To prove that the opposite implication is not true, consider the threshold access structure for $n=4$ and $t=2$. Show that this access structure cannot admit a vector space secret sharing scheme over $F_2$, but it admits a vector space secret sharing scheme (which one?) over $GF(2^3)$.
+\end{enumerate}
+
+\begin{center}
+    \rule{5cm}{0.4pt}
+\end{center}
+
+\textbf{\textit{Proof (1):}}
+Since $\Gamma$ admits a vector space secret sharing scheme over $\F_p$, there exist $m\in \Z^+$ and $\psi : \P\cup \{D\} \to \F_p^m$ such that $A\in \Gamma$ if and only if $\psi(D)\in\langle \{\psi(P_j)\}_{P_j\in A}\rangle$.
+Define
+\begin{equation*}
+    \begin{split}
+        \Psi: \P\cup\{D\} &\longrightarrow (\F_p^m)^r\\
+        P &\longmapsto (\psi(P),\ldots, \psi(P)).
+    \end{split}
+\end{equation*}
+Suppose that we want to share a secret $S = (s_1, \ldots, s_r) \in GF(q)$.
+Choose a random vector $v = (v_1, \ldots, v_r)\in (\F_p^m)^r$ satisfying $$v \cdot \Psi(D) = (v_1 \cdot \psi(D), \ldots, v_r \cdot \psi(D)) = (s_1, \ldots, s_r) = S,$$ and for $j = 1,\ldots, n$, let $S_j = v\cdot\Psi(P_j)$ be the piece of secret that each $P_j$ can compute.
+
+If $A\in \Gamma$, by hypothesis we have that 
+\begin{equation*}
+    \begin{split}
+        \psi(D) = \sum_{P_j\in A} \lambda^A_j \psi(P_j) \Rightarrow \Psi(D) = \sum_{P_j\in A} \lambda^A_j \Psi(P_j).
+    \end{split}
+\end{equation*}
+Hence, the secret we wanted to share can be recovered by a linear combination of the pieces computed by the participants in $A$, 
+\begin{equation*}
+    \begin{split}
+        \sum_{P_j \in A} \lambda^A_j S_j = \sum_{P_j \in A} \lambda^A_j v\cdot \Psi(P_j) = v\cdot (\sum_{P_j \in A} \lambda^A_j \Psi(P_j)) = v\cdot \Psi(D) = S.
+    \end{split}
+\end{equation*}
+
+Observe that $(\F_p^m)^r \cong GF(q)^m$ because two finite fields of the same cardinality are isomorphic.
+Via this isomorphism, it is clear that we can redefine $\Psi$ to have image in $GF(q)^m$.
+Also, the coefficients $\lambda^A_j$ can be embedded in $GF(q)$ using the natural inclusion.
+
+If $B\not \in \Gamma$, we want to see that the shares of participants in $B$ do not give any information about the secret.
+The vector space secret sharing scheme over $\F_p$ satisfies that the probability of obtaining the pieces of the participants in $B$ is the same for any secret in $\F_p$.
+Then, since $\psi(D) \not \in \langle \{\psi(P_j)\}_{P_j\in B}\rangle$ and by construction of $\Psi$, any possible secret in $GF(q)$ is also equally likely from the shares $\{S_j\}_{P_j\in B}$. 
+
+Therefore, $\Gamma$ admits a vector space secret sharing scheme over $GF(q)$. \hfill $\qed$
+
+\begin{center}
+    \rule{5cm}{0.4pt}
+\end{center}
+
+\textbf{\textit{Proof (2):}}
+Suppose that the $(2,4)$-threshold access structure, $\P = \{P_1, P_2, P_3, P_4\}$ and $\Gamma = \binom{\P}{2}$,  admits a vector space secret sharing scheme ove $\F_2$.
+Let $\psi: \P \to \F_2^m$ be a map such that $A\in\Gamma$ if and only if $\psi(D)\in\langle \{\psi(P_j)\}_{P_j\in A}\rangle$, with $\psi(D) \in \F_2^m\setminus\{0\}$.
+In particular, $\psi$ must satisfy
+\begin{equation*}
+    \begin{split}
+        \psi(D) = & \lambda_1\psi(P_1) + \lambda_2\psi(P_2)\\
+        \psi(D) = & \lambda_3\psi(P_2) + \lambda_4\psi(P_3)\\
+        \psi(D) = & \lambda_5\psi(P_1) + \lambda_6\psi(P_3)
+    \end{split}
+\end{equation*}
+for some $\lambda_i \in \F_2$.
+In fact, $\lambda_i = 1 \forall i$ because a minimum of two participants is needed to recover the secret.
+If we sum the first two equations, we get the contradiction $$0 = \psi(D) + \psi(D) = \psi(P_1) + \psi(P_3) = \psi(D).$$
+Hence, the $(2,4)$-threshold access structure does not admit a vector space secret sharing scheme over $\F_2$.
+
+To end, let us construct a vector space secret sharing scheme over $GF(8)$, as a counterexample of the opposite implication of the statement in (a).
+First of all, recall that $GF(8)$ is the field of polynomials in $\F_2[x]$ of degree less than 3.
+Define $\Psi : \P\cup\{D\} \to GF(8)^2$ by $\Psi(D) = (1, 0), \Psi(P_1) = (1, x), \Psi(P_2) = (1, x+1), \Psi(P_3) = (1, x^2), \Psi(P_4) = (1, x^2+1)$.
+To satisfy the condition $A\in\Gamma$ if and only if $\Psi(D)\in\langle \{\Psi(P_j)_{P_j\in A}\}\rangle$, we have to solve
+\begin{equation*}
+    \begin{split}
+        \Psi(D) = \lambda_{ij}\Psi(P_i) + \mu_{ij}\Psi(P_j), \text{ for } i < j.
+    \end{split}
+\end{equation*}
+Let us compute the solution for our choice of $\Psi$:
+\begin{equation*}
+    \begin{split}
+        \left.\begin{aligned}
+        1 & = \lambda_{12} + \mu_{12}\\
+        0 & = \lambda_{12} x + \mu_{12} (x+1)\\
+        \end{aligned}\right\} & \iff \lambda_{12} = x + 1, \mu_{12} = x,\\
+        \left.\begin{aligned}
+        1 & = \lambda_{13} + \mu_{13}\\
+        0 & = \lambda_{13} x + \mu_{13} x^2\\
+        \end{aligned}\right\} & \iff \lambda_{13} = x^2+x+1,\mu_{13} = x^2+x,\\
+        \left.\begin{aligned}
+        1 & = \lambda_{14} + \mu_{14}\\
+        0 & = \lambda_{14} x + \mu_{14} (x^2+1)\\
+        \end{aligned}\right\} & \iff \lambda_{14} = x,\mu_{14} = x+1,\\
+        \left.\begin{aligned}
+        1 & = \lambda_{23} + \mu_{23}\\
+        0 & = \lambda_{23} (x+1) + \mu_{23} x^2\\
+        \end{aligned}\right\} & \iff \lambda_{23} = x^2+x,\mu_{23} = x^2+x+1,\\
+        \left.\begin{aligned}
+        1 & = \lambda_{24} + \mu_{24}\\
+        0 & = \lambda_{24} (x+1) + \mu_{24} (x^2+1)\\
+        \end{aligned}\right\} & \iff \lambda_{24} = x^2,\mu_{24} = x^2+1,\\
+        \left.\begin{aligned}
+        1 & = \lambda_{34} + \mu_{34}\\
+        0 & = \lambda_{34} x^2 + \mu_{34} (x^2+1)\\
+        \end{aligned}\right\} & \iff \lambda_{34} = x^2+1,\mu_{34} = x^2.\\
+    \end{split}
+\end{equation*}
+To share a secret $s \in GF(8)$, we have to choose a random vector $v\in GF(8)^2$ such that $v\cdot\Psi(D) = s$.
+Each participant $P_j$ is able to compute $s_j = v\cdot \Psi(P_j)$, and the secret can be recovered using the computed coefficients, 
+\begin{equation*}
+    \begin{split}
+        s = \lambda_{ij}s_i + \mu_{ij}s_j,
+    \end{split}
+\end{equation*}
+for each pair $(i,j)$ with $i<j$.
+Observe that only one participant do not give any information about the secret.
+
+This vector space secret sharing scheme is the well-known Shamir secret sharing scheme.
+For a general $(t, n)$-threshold access structure and a finite field $\F$ with more than $n$ elements, we have to choose $n$ different elements $\alpha_1,\ldots,\alpha_n \in \F\setminus\{0\}$, and define $\Psi(D) = (1,0, \ldots, 0)$, $\Psi(P_i) = (1, \alpha_i, \ldots, \alpha_i^{t-1})$. \hfill $\qed$
+

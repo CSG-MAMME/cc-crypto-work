@@ -12,14 +12,31 @@
 \usepackage{fancyhdr}
 \usepackage{setspace}
 \usepackage{tabularx}
+\usepackage{tcolorbox}
 \usepackage{tikz}
 \usepackage[a4paper, left=2cm, right=2cm, top=2.5cm, bottom=2cm]{geometry}
+
+% Links, link colors, and clickable ToC
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
 
 \pagestyle{fancy}
 \fancyhf{}
 \rhead{Group 2 - Problem \thesection}
 \lhead{M. Altarriba, E. Gonzalvo, A. Mir, C. Segarra}
 \cfoot{\thepage}
+
+% New commands
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+\renewcommand{\P}{\mathcal{P}}
 
 \newtheorem{obs}{Observation}
 \newtheorem{theorem}{Theorem}
