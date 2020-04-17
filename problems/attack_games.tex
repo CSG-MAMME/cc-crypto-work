@@ -1,0 +1,62 @@
+\appendix
+\section{Attack Games} \label{sec:ag}
+
+\subsection{Attack Game 3.3 (Distinguishing $P_0$ from $P_1$)} \label{ag:3-3}
+
+For given probability distributions $P_0$ and $P_1$ on a finite set $\mathcal{R}$, and for a given adversary $\mathcal{A}$, we define two experiments, Experiment 0 and Experiment 1.
+For $b = 0,1$, we define:
+
+\textbf{Experiment $b$:}
+\begin{itemize}
+    \item The challenger computes $x$ as $x \overset{R}{\longleftarrow} P_b$ and sends $x$ to the adversary.
+
+    \item Given $x$, the adversary computes and outputs a bit $\hat{b} \in \{ 0,1 \}$.
+\end{itemize}
+
+For $b = 0,1$, let $W_b$ be the event that $\mathcal{A}$ outputs 1 in Experiment $b$.
+We define $\mathcal{A}$'s \textbf{advantage} with respect to $P_0$ and $P_1$ as
+\begin{equation*}
+    \text{Distadv}[\mathcal{A}, P_0, P_1] \coloneqq \left\vert \text{Pr}[W_0] - \text{Pr}[W_1] \right\vert.
+\end{equation*}
+
+\subsection{Attack Game 4.2 (PRF)} \label{ag:4-2}
+
+For a given PRF $F$, defined over $(\mathcal{K}, \mathcal{X} , \mathcal{Y})$, and for a given adversary $\mathcal{A}$, we define two experiments, Experiment $0$ and Experiment $1$. For $b = 0,1$, we define:
+
+Experiment $b$:
+\begin{itemize}
+    \item The challenger selects $f \in \text{Funs}[\mathcal{X},\mathcal{Y}]$ as follows:
+        if $b = 0: k \overset{R}{\leftarrow} K, f\leftarrow F(k, ·)$;
+        if $b = 1: f \overset{R}{\leftarrow} Funs[X , Y]$.
+
+    \item 
+The adversary submits a sequence of queries to the challenger.
+For $i = 1, 2,\ldots,$ the $i$th query is an input data block $x_{i} \in \mathcal{X}$ .
+The challenger computes $y_{i}\leftarrow f(x_{i})\in \mathcal{Y}$, and gives $y_{i}$ to the adversary.
+\item
+The adversary computes and outputs a bit $\hat{b}\in {0,1}$.
+\end{itemize}
+
+For $b = 0,1$ let $W_b$ be the event that $\mathcal{A}$ outputs 1 in Experiment $b$.
+We define $\mathcal{A}$'s \textbf{advantage} with respect to $P_0$ and $P_1$ as
+\begin{equation*}
+    \text{Distadv}[\mathcal{A}, P_0, P_1] \coloneqq \left\vert \text{Pr}[W_0] - \text{Pr}[W_1] \right\vert.
+\end{equation*}
+
+\subsection{Attack Game 13.1 (Signature Security)} \label{ag:13-1}
+
+For a given signature scheme $S = (G, S, V)$, defined over $(\mathcal{M}, \Sigma)$, and a given adversary $\mathcal{A}$, the attack game runs as follows:
+\begin{itemize}
+    \item The challenger runs $(pk, sk) \overset{R}{\longleftarrow} G()$ and sends $pk$ to $\mathcal{A}$.
+    \item $\mathcal{A}$ queries the challenger several times.
+        For $i = 1, 2, \dots,$ the $i$th \textit{signing query} is a message $m_i \in \mathcal{M}$.
+        Given $m_i$, the challenger computes $\sigma_i \overset{R}{\longleftarrow} S(sk, m_i)$, and then gives $\sigma_i$ to $\mathcal{A}$.
+    \item Eventually $\mathcal{A}$ outputs a candidate forgery pair $(m, \sigma) \in \mathcal{M} \times \Sigma$.
+\end{itemize}
+We say that the adversary wins the game if the following two conditions hold:
+\begin{itemize}
+    \item $V(pk, m, \sigma) = \texttt{accept}$, and
+    \item $m$ is new, namely $m \not\in \{ m_1, m_2, \dots \}$.
+\end{itemize}
+
+We define $\mathcal{A}$'s advantage with respect to $S$, denoted $\text{SIGadv}[\mathcal{A}, S]$, as the probability that $\mathcal{A}$ wins the game.

@@ -14,48 +14,93 @@ In particular, you should show that for every adversary $\mathcal{A}$ attacking 
 \end{center}
 
 \textbf{\textit{Proof:}}
-To solve this exercise we will see that if we can break the PRF game then the two distributions of the exercise 10.10 are not computationally indistinguishable.
-Let's recall what the PRF game is about:
+To solve this exercise we will see that if we can break the PRF game then two distributions are not computationally indistinguishable, and following the result from Exercise 10.10, the DDH assumption does not hold.
+In particular, we play the attacker role in the PRF game as defined in \hyperref[ag:4-2]{Attack Game 4.2} and will leverage an adversary for the distinguishing game as defined in \hyperref[ag:3-3]{Attack Game 3.3}.
 
-For a given PRF $F$, defined over $(\mathcal{K}, \mathcal{X} , \mathcal{Y})$, and for a given adversary
-A, we define two experiments, Experiment $0$ and Experiment $1$. For $b=0,1$, we define:
-
-Experiment $b$:
-\begin{itemize}
-\item 
-The challenger selects $f \in Funs[\mathcal{X},\mathcal{Y}]$ as follows:
-
-if $b = 0: k\leftarrow K, f\leftarrow F(k, ·)$;
-if $b = 1: f\leftarrow Funs[X , Y]$.
-\item 
-The adversary submits a sequence of queries to the challenger.
-For $i = 1, 2,\ldots,$ the ith query is an input data block $x_{i}\in\mathcal{X}$ .
-The challenger computes $y_{i}\leftarrow f(x_{i})\in \mathcal{Y}$, and gives $y_{i}$ to the adversary.
-\item
-The adversary computes and outputs a bit $\hat{b}\in {0,1}$.
-\end{itemize}
-
-So we consider the following triplet:
-$$
-(g^{x},g^{k},T)
-$$
-Where $g^{x}=H(m)$ for some message, $g^{k}$ is an element of the group $g\in\mathbb{G}$  and $k$ the element chosed randomly in the PRF game. And $T$ the final output of the PRF game. So, if the challenger does experiment $0$ then $T=g^{xk}$, and if does experiment $1$ $T$ is random element of $\mathbb{G}$.
-
-So, as can break the game of the pseudorandom function i can disting between $T=g^{kx}$ and $T$ with some no negligible probability as a random element. So if i consider the tripets:
+Let us define define, using the notation from Exercise 10.10, the following variables for the random distributions:
 \begin{equation*}
-    (g^{x},g^{k},g^{xk}), \hspace{5pt} (g^{x},g^{k},T)
+    \begin{split}
+        g^{a_i} = H(m) = g^x \text{ for some $x$, } \hspace{3pt} \beta_i = k \in \mathbb{Z}_q, \text{ and } \hspace{3pt} \gamma_i \text{ random}.
+    \end{split}
 \end{equation*}
-When the challenger makes experiment $0$ it will correspond to the triplet $(g^{x},g^{k},g^{xk})$ and when he plays 
+The complete scheme is depicted in Figure~\ref{p2:ag}.
 
-Now as I can break the game I can distinguish between the two triplets and this is impossible by the DDH assumption, so I arrive to a contradiction supposing that I can break the PRF game.
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}
+        % Define Variables
+        \def\lR{0.75}
+        \def\rR{5.35}
+        \def\lDR{10.75}
+        \def\rDR{15.35}
+        \def\bottom{-6}
 
-$$PRFadv[\mathcal{A},F]=|Pr(W_{0})-Pr(W_{1})|$$
+        % Overall Scheme
+        \draw[thick] (0,0) -- (6,0) node[midway, anchor=south] {PRF Game $4.2$};
+        \node[anchor = north west] at (0,0) (c-r) {\scriptsize Challenger};
+        \draw[dotted] (\lR, -0.5) -- (\lR,\bottom);
+        \node[anchor = north east, text=red] at (6,0) {\scriptsize Attacker};
+        \draw[dotted] (\rR, -0.5) -- (\rR, \bottom);
+        \draw[thick, dashed] (6,0) -- (6, \bottom);
+        \draw[thick] (10,0) -- (16,0) node[midway, anchor=south] {Distinguishing Game $3.3$};
+        \node[anchor = north west, text=red] at (10,0) {\scriptsize Challenger};
+        \node[anchor = north east, text=blue] at (16,0) {\scriptsize Attacker};
+        \draw[thick, dashed] (10,0) -- (10, \bottom);
+        \draw[dotted] (\lDR, -0.5) -- (\lDR, \bottom);
+        \draw[dotted] (\rDR, -0.5) -- (\rDR, \bottom);
 
-where $W_{b}$ is the event that the adversary outputs $b$ in experiment $b$. In our case we have that:
+        % Start Games
+        \draw[->] (\rR, -1) -- (\lR, -1) node[midway, anchor=south] {\scriptsize Start Game};
+        \node[anchor=west] at (\lR, -1.5) {$b \overset{\mathcal{R}}{\longleftarrow} \{0,1\}$};
+        \node[anchor=north west, align=left] at (\lR, -1.75) {\tiny $f \overset{b=0}{\longleftarrow} F(k, \cdot) = H(\cdot)^k = g^{\alpha_i \beta_i}$ \\ \tiny $f \overset{b=1}{\longleftarrow} Funs(\mathcal{X}, \mathcal{Y}) = g^{\gamma_i}$};
 
-$$PRFadv[\mathcal{A},F]=Distadv[\mathcal{A},\mathcal{D},\mathcal{R}]$$
+        % First Signing Query
+        \draw[->] (\rR, -3.25) -- (\lR, -3.25) node[midway, anchor=south] {\scriptsize $Image(m_1)$};
+        \node[anchor=south west] at (\lR, -4.25) {$y_1 \leftarrow f(m_1)$};
+        \draw[->] (\lR, -4.25) -- (\rR, -4.25) node[anchor=south east] {$y_1$};
+        \draw[->,color=red] (\rR, -4.5) -- (\lDR, -4.5) node[midway, anchor=south] {$y_1$};
+        \draw[->] (\lDR, -4.75) -- (\rDR, -4.75) node[anchor=south east, text=blue] {$y_1$};
 
-because in this case distinguish between the two experiments is the same of distinguish between the two tripets so by exercise 10.10:
+        % Forgery
+        \draw[->, thick, color=blue] (\rDR, -5.35) -- (\lDR, -5.35) node[midway, anchor=south] {$\hat{b}$};
+        \draw[->, thick, color=red] (\rR, -5.75) -- (\lR, -5.75) node[midway, anchor=south] {$\hat{b} \in \{0,1\}$};
+        \draw[->, color=red] (\lDR, -5.5) -- (\rR, -5.5) node[midway, anchor=south, text=red, align=left] {$\hat{b}$};
+    \end{tikzpicture}
+    \caption{Attack to the $PRF$ game triggering an attacker for the Distinguishing one. In red are the two roles that we actively play, and in black and blue two different entities respectively.\label{p2:ag}}
+\end{figure}
 
-$$PRFadv[\mathcal{A},F]=Distadv[\mathcal{A},\mathcal{D},\mathcal{R}]\leq \frac{1}{q}+ DDHadv[\mathcal{B},\mathbb{G}]$$
+Let us consider the following triplet $(g^{x},g^{k}, f(m))$.
+Where $g^{x}=H(m)$ for some message, $g^{k}$ is an element of the group $g\in\mathbb{G}$, $k$ the random seed for the PRF game, and $f(m)$ the output of the image query.
+\begin{itemize}
+    \item If $b = 0$: then $f(m) = g^{xk} = H(m)^k$. 
+    \item If $b = 1$: then $f(m)$ is a random element of $\mathbb{G}$.
+\end{itemize}
+Then the following holds:
+\begin{equation*}
+    \begin{split}
+        \text{PRFadv} & = \left\vert \text{Pr}[W_0] - \text{Pr}[W_1] \right\vert \\
+            & = \left\vert Pr(\hat{b}_{PRF} = 1 | b = 0) - Pr(\hat{b}_{PRF} = 1 | b = 1)\right\vert \\
+            & = \left\vert Pr(\hat{b}_{PRF} = 1 | b = 0) - Pr(\hat{b}_{PRF} = 1 | b = 1)\right\vert \\
+            & = \text{Distadv} \leq \frac{1}{q} + \text{DDHadv}
+    \end{split}
+\end{equation*}
+from where, if the DDH assumption holds and DDHadv is negligible, then so is PRFadv and $F$ is indeed PRF secure. \hfill \qed
+
+%So, as can break the game of the pseudorandom function i can disting between $T=g^{kx}$ and $T$ with some no negligible probability as a random element. So if i consider the tripets:
+%\begin{equation*}
+%    (g^{x},g^{k},g^{xk}), \hspace{5pt} (g^{x},g^{k},T)
+%\end{equation*}
+%When the challenger makes experiment $0$ it will correspond to the triplet $(g^{x},g^{k},g^{xk})$ and when he plays 
+%
+%Now as I can break the game I can distinguish between the two triplets and this is impossible by the DDH assumption, so I arrive to a contradiction supposing that I can break the PRF game.
+%
+%$$PRFadv[\mathcal{A},F]=|Pr(W_{0})-Pr(W_{1})|$$
+%
+%where $W_{b}$ is the event that the adversary outputs $b$ in experiment $b$. In our case we have that:
+%
+%$$PRFadv[\mathcal{A},F]=Distadv[\mathcal{A},\mathcal{D},\mathcal{R}]$$
+%
+%because in this case distinguish between the two experiments is the same of distinguish between the two tripets so by exercise 10.10:
+%
+%$$PRFadv[\mathcal{A},F]=Distadv[\mathcal{A},\mathcal{D},\mathcal{R}]\leq \frac{1}{q}+ DDHadv[\mathcal{B},\mathbb{G}]$$
 

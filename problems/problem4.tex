@@ -67,7 +67,7 @@ In fact, $\lambda_i = 1 \forall i$ because a minimum of two participants is need
 If we sum the first two equations, we get the contradiction $$0 = \psi(D) + \psi(D) = \psi(P_1) + \psi(P_3) = \psi(D).$$
 Hence, the $(2,4)$-threshold access structure does not admit a vector space secret sharing scheme over $\F_2$.
 
-To end, let us construct a vector space secret sharing scheme over $GF(8)$, as a counterexample of the opposite implication of the statement in (a).
+To end, let us construct a vector space secret sharing scheme over $GF(8)$, as a counterexample of the opposite implication of the statement in (1).
 First of all, recall that $GF(8)$ is the field of polynomials in $\F_2[x]$ of degree less than 3.
 Define $\Psi : \P\cup\{D\} \to GF(8)^2$ by $\Psi(D) = (1, 0), \Psi(P_1) = (1, x), \Psi(P_2) = (1, x+1), \Psi(P_3) = (1, x^2), \Psi(P_4) = (1, x^2+1)$.
 To satisfy the condition $A\in\Gamma$ if and only if $\Psi(D)\in\langle \{\Psi(P_j)_{P_j\in A}\}\rangle$, we have to solve
@@ -113,7 +113,7 @@ Each participant $P_j$ is able to compute $s_j = v\cdot \Psi(P_j)$, and the secr
     \end{split}
 \end{equation*}
 for each pair $(i,j)$ with $i<j$.
-Observe that only one participant do not give any information about the secret.
+Observe that only one participant does not give any information about the secret.
 
 This vector space secret sharing scheme is the well-known Shamir secret sharing scheme.
 For a general $(t, n)$-threshold access structure and a finite field $\F$ with more than $n$ elements, we have to choose $n$ different elements $\alpha_1,\ldots,\alpha_n \in \F\setminus\{0\}$, and define $\Psi(D) = (1,0, \ldots, 0)$, $\Psi(P_i) = (1, \alpha_i, \ldots, \alpha_i^{t-1})$. \hfill $\qed$

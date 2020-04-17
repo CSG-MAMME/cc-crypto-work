@@ -24,7 +24,7 @@ Now the signing algorithm for $S'$ is deterministic.
 
 \textbf{\textit{Proof:}}
 Let us denote, for the sake of simplicity, as $S_{R}$ the \textit{randomized} signature scheme, and as $S_{DR}$ the \textit{derandomized}.
-Our hypothesis is that $S_R$ is secure against a chosen message attack, as defined in the Attack Game $13.1$, and that $F$ is a secure $PRF$, as defined in Attack Game $4.2$.
+Our hypothesis is that $S_R$ is secure against a chosen message attack, as defined in the \hyperref[ag:13-1]{Attack Game $13.1$}, and that $F$ is a secure $PRF$, as defined in \hyperref[ag:4-2]{Attack Game $4.2$}.
 
 We will build an attacker for the $PRF$ game, $A_{PRF}$ who acts as a challenger for Attack Game $13.1$.
 The scheme is depicted in Figure \ref{fig:attack-game}
@@ -88,7 +88,7 @@ The scheme is depicted in Figure \ref{fig:attack-game}
         
 
     \end{tikzpicture}
-    \caption{Attack to the $PRF$ game using triggering an attacker for the Signature one. In red are the two roles that we actively play, and in black and blue two different entities respectively.\label{fig:attack-game}}
+    \caption{Attack to the $PRF$ game triggering an attacker for the Signature one. In red are the two roles that we actively play, and in black and blue two different entities respectively.\label{fig:attack-game}}
 \end{figure}
 
 Initially, the challenger in the $PRF$ game randomly chooses $b = 0,1$:
