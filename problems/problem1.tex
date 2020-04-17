@@ -78,7 +78,7 @@ To prove that the scheme from Figure~\ref{prob1:encryption} is not CPA secure we
         \def\bottom{-9.5}
 
         % Overall Scheme
-        \draw[thick] (0,0) -- (10,0) node[midway, anchor=south] {PRF Game $4.2$};
+        \draw[thick] (0,0) -- (10,0) node[midway, anchor=south] {CPA Game $5.2$};
         \node[anchor = north west] at (0,0) (c-r) {Challenger};
         \draw[dotted] (\lR, -0.5) -- (\lR,\bottom);
         \node[anchor = north east] at (10,0) {Attacker};
@@ -109,14 +109,15 @@ We will work instead with the "bit guessing" game version described in Boneh \& 
     \text{CPAadv}[\mathcal{A}, \mathcal{E}] = 2 \cdot \text{CPAadv}^{*}[\mathcal{A}, \mathcal{E}] = 2 \cdot \left| \mathbb{P}[\hat{b} = b] - \frac{1}{2} \right|
 \end{equation*}
 
-Now, we build an smart adversary that only takes 2 queries to break the CPA security: in the first attempt, they will send the messages $M = <m_1$ $\vert \vert$ $m_2>$ and $\hat M = <m_1$ $\vert \vert$ $\hat m_2>$, meaning that in both cases the challenger will return the same $s := F_k (r \oplus m_1)$, altogether with the first generated random number $r$.
+Now, we build a smart adversary that only takes 2 queries to break the CPA security: in the first one, it sends $M_{10} = \langle m_1$ $\vert \vert$ $m_2 \rangle$ and $M_{11} = \langle m_1$ $\vert \vert$ $\hat m_2 \rangle$.
+Note that, in both cases, the challenger will return the same $s \coloneqq F_k (r \oplus m_1)$, together with the first generated random number $r$.
 
-Now the adversary has access to a valuous information: $r \oplus m_1$ (since they have both strings) and its pseudo-random permutation $s = F_k (r \oplus m_1)$.
-The second query will consist of the two messages $M' = <r \oplus m_1$ $\vert \vert$ $s>$ and $\hat M' = <r \oplus m_1$ $\vert \vert$ $p>$, where $p$ is any string other than $s$.
-From the challenger, the adversary will receive the new values $r'$ (again, randomly generated), $s' := F_k(r' \oplus r \oplus m_1)$ and $t' := F_k(r' \oplus (r \oplus m_1) \oplus F_k (r \oplus m_1) \oplus m_x)$, where $m_x$ could either be $s$ or $p$ with equal probability.
+Now the adversary has access to $r \oplus m_1$ (since it has both strings), and its pseudo-random permutation $s = F_k (r \oplus m_1)$.
+The second query consists of the two messages $M_{20} = \langle r \oplus m_1$ $\vert \vert$ $s \rangle$ and $M_{21} = \langle r \oplus m_1$ $\vert \vert$ $p \rangle$, where $p$ is a string different than $s$.
+The adversary then receives the new values $r'$ (randomly generated), $s' \coloneqq F_k(r' \oplus r \oplus m_1)$ and $t' \coloneqq F_k(r' \oplus (r \oplus m_1) \oplus F_k (r \oplus m_1) \oplus m_x)$, where $m_x$ could either be $s$ or $p$ with equal probability.
 
-The key idea now is to see that the messages $s'$ and $t'$ will be exactly the same if and only if the message selected by the challenger is $m_x = s$.
-This happens because $F_k(r \oplus m_1) \oplus s = 1$, which leads to $t' = F_k(r' \oplus r \oplus m_1) = s'$.
+We now make the following claim: messages $s'$ and $t'$ are the same if and only if the challenger selected $m_x = s$.
+This is due to the fact that $F_k(r \oplus m_1) \oplus s = 1$, which leads to $t' = F_k(r' \oplus r \oplus m_1) = s'$.
 And this happens exclusively for $m_x = s$ since F is a permutation and, therefore, gives different outputs for different inputs.
 
 That means in the second query the adversary is capable to find the correct $\hat b$ with probability $1$, leading to $\text{CPAadv}[\mathcal{A}, \mathcal{E}] = 2 \cdot \vert \mathbb{P}[\hat{b} = b] - \frac{1}{2} \vert = 2 \cdot \vert 1 - \frac{1}{2} \vert = 1$, which is clearly not negligible, and the scheme is not CPA-secure. \hfill \qed
