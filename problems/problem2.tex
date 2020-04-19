@@ -86,21 +86,3 @@ Then the following holds:
 \end{equation*}
 from where, if the DDH assumption holds and DDHadv is negligible, then so is PRFadv and $F$ is indeed PRF secure. \hfill \qed
 
-%So, as can break the game of the pseudorandom function i can disting between $T=g^{kx}$ and $T$ with some no negligible probability as a random element. So if i consider the tripets:
-%\begin{equation*}
-%    (g^{x},g^{k},g^{xk}), \hspace{5pt} (g^{x},g^{k},T)
-%\end{equation*}
-%When the challenger makes experiment $0$ it will correspond to the triplet $(g^{x},g^{k},g^{xk})$ and when he plays 
-%
-%Now as I can break the game I can distinguish between the two triplets and this is impossible by the DDH assumption, so I arrive to a contradiction supposing that I can break the PRF game.
-%
-%$$PRFadv[\mathcal{A},F]=|Pr(W_{0})-Pr(W_{1})|$$
-%
-%where $W_{b}$ is the event that the adversary outputs $b$ in experiment $b$. In our case we have that:
-%
-%$$PRFadv[\mathcal{A},F]=Distadv[\mathcal{A},\mathcal{D},\mathcal{R}]$$
-%
-%because in this case distinguish between the two experiments is the same of distinguish between the two tripets so by exercise 10.10:
-%
-%$$PRFadv[\mathcal{A},F]=Distadv[\mathcal{A},\mathcal{D},\mathcal{R}]\leq \frac{1}{q}+ DDHadv[\mathcal{B},\mathbb{G}]$$
-

@@ -1,6 +1,16 @@
 \appendix
 \section{Attack Games} \label{sec:ag}
 
+\subsection{Attack Game 2.4 (Semantic Security: Bit-Guessing Version)} \label{ag:2-4}
+
+For a given cipher $\varepsilon = (E, D)$, defined over $(\mathcal{K}, \mathcal{M}, \mathcal{C})$, and for a given adversary $\mathcal{A}$, the attack game runs as follows:
+\begin{itemize}
+    \item The adversary computes $m_0, m_1 \in \mathcal{M}$, of the same length, and sends them to the challenger.
+    \item The challenger computes $b \overset{R}{\longleftarrow} \{ 0, 1\}, k \overset{R}{\longleftarrow} \mathcal{K}, c \overset{R}{\longleftarrow} E(k, m_b)$, and sends $c$ to the adversary.
+    \item The adversary outputs a bit $\hat{b} \in \{0, 1\}$.
+\end{itemize}
+We say that $\mathcal{A}$ \textbf{wins} the game if $\hat{b} = b$.
+
 \subsection{Attack Game 3.3 (Distinguishing $P_0$ from $P_1$)} \label{ag:3-3}
 
 For given probability distributions $P_0$ and $P_1$ on a finite set $\mathcal{R}$, and for a given adversary $\mathcal{A}$, we define two experiments, Experiment 0 and Experiment 1.
